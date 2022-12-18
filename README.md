@@ -2,8 +2,6 @@
 
 > ### Example Laravel codebase containing a shortener link API (https://github.com/devairbjr/link-shortner)
 
-This repo is functionality complete — PRs and issues welcome!
-
 ----------
 
 # Getting started
