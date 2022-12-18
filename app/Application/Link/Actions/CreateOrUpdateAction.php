@@ -19,7 +19,7 @@ class CreateOrUpdateAction extends AbstractAction
             $validate = $this->validate($request);
 
             if($validate->fails()){
-                return response()->json(['message' => $validate->errors()], 409);
+                return response()->json(['errors' => $validate->errors()], 409);
             }
 
             $longUrl = $request->long_url;
@@ -48,7 +48,7 @@ class CreateOrUpdateAction extends AbstractAction
                 'shortUrl' => $link->short_url,
             ]);
         } catch (\Exception $error) {
-            return response()->json(['message' => $error->getMessage()], 409);
+            return response()->json(['errors' => $error->getMessage()], 409);
         }
     }
 

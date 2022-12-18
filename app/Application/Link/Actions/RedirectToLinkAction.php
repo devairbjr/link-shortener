@@ -20,10 +20,10 @@ class RedirectToLinkAction extends AbstractAction
                 ->where('expires_at', '>=', $now)
                 ->first();
             if (!$link) {
-                return response()->json(['message' => 'Link not found'], 409);
+                return response()->json(['errors' => 'Link not found'], 409);
             }
-            header('Location: ' . $link->long_url, 301);
-            return die();
+
+            return header('Location: ' . $link->long_url, 301);
         } catch (\Exception $error) {
             return response()->json(['message' => $error->getMessage()], 409);
         }
