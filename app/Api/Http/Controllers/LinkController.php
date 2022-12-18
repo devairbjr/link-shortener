@@ -15,8 +15,8 @@ class LinkController extends Controller
     {
         return (new CreateOrUpdateAction())($request);
     }
-    public function redirectToLink(Request $request)
+    public function redirectToLink($short_url)
     {
-        return (new RedirectToLinkAction())($request);
+        return (new RedirectToLinkAction())($short_url);
     }
 }

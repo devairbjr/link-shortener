@@ -18,7 +18,7 @@ class LinkRoutesServiceProvider extends RouteServiceProvider
                         LinkController::class,
                         'createOrUpdate',
                     ])->name('short');
-                    Route::post('/redirect', [
+                    Route::get('/redirect/{short_url}', [
                         LinkController::class,
                         'redirectToLink',
                     ])->name('redirect');

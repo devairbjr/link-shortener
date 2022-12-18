@@ -11,11 +11,10 @@ use Exception;
 
 class RedirectToLinkAction extends AbstractAction
 {
-    public function __invoke(Request $request)
+    public function __invoke($short_url)
     {
         try {
-            $this->validate($request);
-            $shortUrl = $request->short_url;
+            $shortUrl = $short_url;
             $now = Carbon::now()->toDateString();
             $link = Link::where('short_url', $shortUrl)
                 ->where('expires_at', '>=', $now)
@@ -31,8 +30,5 @@ class RedirectToLinkAction extends AbstractAction
     }
     protected function validate(Request $request)
     {
-        $request->validate([
-            'short_url' => 'required|string',
-        ]);
     }
 }

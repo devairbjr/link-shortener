@@ -8,38 +8,30 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Domain\Entities\Link;
 use Exception;
+use Illuminate\Support\Facades\Validator;
+
 
 class CreateOrUpdateAction extends AbstractAction
 {
     public function __invoke(Request $request)
     {
         try {
-            $this->validate($request);
+            $validate = $this->validate($request);
+
+            if($validate->fails()){
+                return response()->json(['message' => $validate->errors()], 409);
+            }
 
             $longUrl = $request->long_url;
-            $customUrl = $request->custom_url;
             $now = Carbon::now()->toDateString();
             $linkByLongUrl = Link::where('long_url', $longUrl)->first();
-            $linkByCustomUrl = Link::where('short_url', $customUrl)->first();
 
-            if ($linkByLongUrl) {
-                if ($linkByLongUrl->expires_at < $now) {
-                    return response()->json(['message' => 'Link expired'], 409);
-                }
+            if ($linkByLongUrl && $linkByLongUrl->expires_at >= $now) {
                 return response()->json([
                     'shortUrl' => $linkByLongUrl->short_url,
                 ]);
             }
-            if ($linkByCustomUrl) {
-                return response()->json([
-                    'message' => 'Custom Link not available',
-                ]);
-            }
-
-            $shortUrl =
-                $linkByCustomUrl == null
-                    ? hash('crc32b', $request->long_url)
-                    : $customUrl;
+            $shortUrl = hash('crc32b', $request->long_url);
 
             $link = Link::upsert(
                 [
@@ -53,7 +45,7 @@ class CreateOrUpdateAction extends AbstractAction
             $link = Link::where('long_url', $longUrl)->first();
 
             return response()->json([
-                'shortUrl' => $shortUrl,
+                'shortUrl' => $link->short_url,
             ]);
         } catch (\Exception $error) {
             return response()->json(['message' => $error->getMessage()], 409);
@@ -62,9 +54,9 @@ class CreateOrUpdateAction extends AbstractAction
 
     protected function validate(Request $request)
     {
-        $request->validate([
-            'long_url' => 'required|url',
-            'custom_url' => 'nullable|string',
+        $validator = Validator::make($request->all(),[
+            'long_url' => 'required | url'
         ]);
+        return $validator;
     }
 }
