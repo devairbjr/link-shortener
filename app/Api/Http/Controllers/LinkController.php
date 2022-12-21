@@ -13,6 +13,12 @@ class LinkController extends Controller
 {
     public function createOrUpdate(Request $request)
     {
+        $validator = Validator::make($request->all(),[
+            'long_url' => 'required | url'
+        ]);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors()], 409);
+        }
         return (new CreateOrUpdateAction())($request);
     }
     public function redirectToLink($short_url)

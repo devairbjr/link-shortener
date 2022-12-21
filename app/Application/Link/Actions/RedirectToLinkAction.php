@@ -28,7 +28,5 @@ class RedirectToLinkAction extends AbstractAction
             return response()->json(['message' => $error->getMessage()], 409);
         }
     }
-    protected function validate(Request $request)
-    {
-    }
+
 }

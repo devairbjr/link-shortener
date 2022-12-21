@@ -9,5 +9,4 @@ abstract class AbstractAction implements IAction
 {
     abstract public function __invoke(Request $request);
 
-    abstract protected function validate(Request $request);
 }
