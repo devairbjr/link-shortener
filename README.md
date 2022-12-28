@@ -96,7 +96,7 @@ Refer the [api specification](#api-specification) for more info.
 
 Update .env file environment variables
 ```dosini
-APP_NAME="Especializa Ti"
+APP_NAME="Shortener Link"
 APP_URL=http://localhost:8989
 DB_CONNECTION=mysql
 DB_HOST=mysql
