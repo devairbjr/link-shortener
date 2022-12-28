@@ -13,11 +13,9 @@ use Illuminate\Support\Facades\Validator;
 
 class CreateAction extends AbstractAction
 {
-    public function __invoke(Request $request)
+    public function __invoke($longUrl)
     {
         try {
-
-            $longUrl = $request->long_url;
             $shortUrl = hash('crc32b', $longUrl);
             $link = Link::create(
                 [

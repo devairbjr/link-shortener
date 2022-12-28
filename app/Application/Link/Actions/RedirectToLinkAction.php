@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Domain\Entities\Link;
+use App\Application\Link\Actions\FindActiveAction;
 use Exception;
 
 class RedirectToLinkAction extends AbstractAction
@@ -15,10 +16,7 @@ class RedirectToLinkAction extends AbstractAction
     {
         try {
             $shortUrl = $short_url;
-            $now = Carbon::now()->toDateString();
-            $link = Link::where('short_url', $shortUrl)
-                ->where('expires_at', '>=', $now)
-                ->first();
+            $link =  (new FindActiveAction())($shortUrl);
             if (!$link) {
                 return response()->json(['errors' => 'Link not found'], 409);
             }

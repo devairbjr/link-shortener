@@ -11,10 +11,9 @@ use Exception;
 
 class FindAction extends AbstractAction
 {
-    public function __invoke(Request $request)
+    public function __invoke($longUrl)
     {
         try {
-            $longUrl = $request->long_url;
             $link = Link::where('long_url', $longUrl)->first();
             return $link;
         } catch (\Exception $error) {

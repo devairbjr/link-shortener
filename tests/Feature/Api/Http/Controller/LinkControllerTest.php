@@ -1,14 +1,26 @@
 <?php
 
-namespace Tests\Feature\Link;
+namespace Tests\Feature\Api\Http\Controller;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ShortTest extends TestCase
+class LinkControllerTest extends TestCase
 {
 
-    public function testRequestErrorRequired()
+    public function testRedirectLinkNotFound1()
+    {
+        $this->json('GET', 'api/link/redirect')->assertStatus(404);
+    }
+    public function testRedirectLinkNotFound2()
+    {
+        $this->json('GET', 'api/link/redirect/devair1')->assertStatus(409)
+        ->assertJson([
+            "errors" => "Link not found"
+        ]);
+    }
+
+    public function testCreateLinkRequestErrorRequired()
     {
         $data = [
             "long_urlll" => "https://testedeva.com",
@@ -18,11 +30,11 @@ class ShortTest extends TestCase
             ->assertStatus(409)
             ->assertJson([
                 "errors" => [
-                    "long_url" => ["validation.required"]
+                    "long_url" => ["long_url is required"]
                 ]
             ]);
     }
-    public function testRequestErrorUrl()
+    public function testCreateLinkRequestErrorUrlInvalid()
     {
         $data = [
             "long_url" => "devair",
@@ -32,8 +44,9 @@ class ShortTest extends TestCase
             ->assertStatus(409)
             ->assertJson([
                 "errors" => [
-                    "long_url" => ["validation.url"]
+                    "long_url" => ["Invalid Url"]
                 ]
             ]);
     }
+
 }

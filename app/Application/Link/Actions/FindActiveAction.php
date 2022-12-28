@@ -11,11 +11,10 @@ use Carbon\Carbon;
 
 class FindActiveAction extends AbstractAction
 {
-    public function __invoke(Request $request)
+    public function __invoke($shortUrl)
     {
         try {
             $now = Carbon::now()->toDateString();
-            $shortUrl = $request->short_url;
             $link = Link::where('short_url', $shortUrl)
                 ->where('expires_at', '>=', $now)
                 ->first();

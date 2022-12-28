@@ -2,24 +2,18 @@
 
 namespace App\Api\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Api\Http\Requests\LinkRequest;
 use Illuminate\Http\Response;
 use App\Application\Link\Actions\CreateOrUpdateAction;
 use App\Application\Link\Actions\RedirectToLinkAction;
-use Carbon\Carbon;
-use Validator;
+use App\Domain\Entities\Link;
 
 class LinkController extends Controller
 {
-    public function createOrUpdate(Request $request)
+    public function createOrUpdate(LinkRequest $request)
     {
-        $validator = Validator::make($request->all(),[
-            'long_url' => 'required | url'
-        ]);
-        if($validator->fails()){
-            return response()->json(['errors' => $validator->errors()], 409);
-        }
-        return (new CreateOrUpdateAction())($request);
+        $longUrl = $request->long_url;
+        return (new CreateOrUpdateAction())($longUrl);
     }
     public function redirectToLink($short_url)
     {
